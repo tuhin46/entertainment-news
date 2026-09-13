@@ -110,6 +110,7 @@ app.controller('AppController', function ($scope, $sce, $location, AuthService, 
 
 app.controller('HomeController', function ($scope, ContentService) {
     $scope.allList = ContentService.getPublished();
+    $scope.trendingSpotlightList = ContentService.getByCategory('Trending', true).slice(0, 4);
     $scope.spotlightList = ContentService.getByCategory('Influencers', true).slice(0, 2)
         .concat(ContentService.getByCategory('Celebrities', true).slice(0, 2));
     $scope.selectedCategory = '';
