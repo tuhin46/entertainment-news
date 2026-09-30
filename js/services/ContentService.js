@@ -2,6 +2,7 @@ app.factory('ContentService', function ($rootScope) {
 
     var STORAGE_KEY = 'ep_content_db';
     var TICKER_KEY = 'ep_ticker_text';
+    var VISITS_KEY = 'ep_site_visits';
     var DEFAULT_TICKER = 'Live coverage: Global Music Tour Announced \u2022 Sci-Fi Blockbuster hits $1B worldwide \u2022 Cannes 2026 dates confirmed';
 
     var defaultData = [
@@ -137,6 +138,57 @@ app.factory('ContentService', function ($rootScope) {
             persist();
         }
         return item;
+    };
+
+    svc.recordView = function (id) {
+        var item = db.find(function (i) { return i.id === parseInt(id); });
+        if (item) {
+            item.views = (item.views || 0) + 1;
+            try { persist(); } catch (e) { /* view counting is non-critical */ }
+        }
+    };
+
+    svc.recordVisit = function () {
+        try {
+            var count = parseInt(localStorage.getItem(VISITS_KEY) || '0', 10);
+            localStorage.setItem(VISITS_KEY, (count + 1).toString());
+        } catch (e) { /* ignore */ }
+    };
+
+    svc.getStats = function () {
+        var totalContentViews = 0;
+        var categoryMap = {};
+
+        db.forEach(function (item) {
+            var v = item.views || 0;
+            totalContentViews += v;
+            if (!categoryMap[item.category]) {
+                categoryMap[item.category] = { category: item.category, views: 0, itemCount: 0 };
+            }
+            categoryMap[item.category].views += v;
+            categoryMap[item.category].itemCount += 1;
+        });
+
+        var categoryBreakdown = Object.keys(categoryMap)
+            .map(function (k) { return categoryMap[k]; })
+            .sort(function (a, b) { return b.views - a.views; });
+
+        var maxCategoryViews = categoryBreakdown.length ? categoryBreakdown[0].views : 0;
+        categoryBreakdown.forEach(function (c) {
+            c.percent = maxCategoryViews ? Math.round((c.views / maxCategoryViews) * 100) : 0;
+        });
+
+        var topContent = db.slice()
+            .sort(function (a, b) { return (b.views || 0) - (a.views || 0); })
+            .slice(0, 8);
+
+        return {
+            siteVisits: parseInt(localStorage.getItem(VISITS_KEY) || '0', 10),
+            totalContentViews: totalContentViews,
+            totalContentItems: db.length,
+            categoryBreakdown: categoryBreakdown,
+            topContent: topContent
+        };
     };
 
     // Converts a File object (from an <input type="file">) into a compressed

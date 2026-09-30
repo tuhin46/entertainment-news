@@ -1,4 +1,4 @@
-app.controller('AdminDashboardController', function ($scope, $location, AuthService, ContentService) {
+app.controller('AdminDashboardController', function ($scope, $location, AuthService, ContentService, FeedbackService) {
 
     var TABS = {
         movies: 'Movies',
@@ -31,6 +31,9 @@ app.controller('AdminDashboardController', function ($scope, $location, AuthServ
 
     $scope.setSection = function (section) {
         $scope.activeSection = section;
+        if (section === 'analytics') {
+            $scope.refreshAnalytics();
+        }
     };
 
     $scope.filteredList = function () {
@@ -129,6 +132,20 @@ app.controller('AdminDashboardController', function ($scope, $location, AuthServ
             $scope.confirmDeleteItem = null;
             refreshList();
         }
+    };
+
+    // ---------- Analytics & Feedback ----------
+    $scope.stats = ContentService.getStats();
+    $scope.feedbackList = FeedbackService.getAll();
+
+    $scope.refreshAnalytics = function () {
+        $scope.stats = ContentService.getStats();
+        $scope.feedbackList = FeedbackService.getAll();
+    };
+
+    $scope.deleteFeedback = function (item) {
+        FeedbackService.remove(item.id);
+        $scope.feedbackList = FeedbackService.getAll();
     };
 
     // ---------- Breaking News Ticker ----------

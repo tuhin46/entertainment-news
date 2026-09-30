@@ -20,6 +20,11 @@
         </div>
 
         <div class="admin-nav-section">
+            <div class="admin-nav-label">Insights</div>
+            <button ng-class="{'active': activeSection==='analytics'}" ng-click="setSection('analytics')"><i class="fa-solid fa-chart-line"></i> Analytics &amp; Feedback</button>
+        </div>
+
+        <div class="admin-nav-section">
             <div class="admin-nav-label">Account</div>
             <button ng-class="{'active': activeSection==='profile'}" ng-click="setSection('profile')"><i class="fa-solid fa-user"></i> Admin Profile</button>
             <button ng-click="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout &amp; Back to Website</button>
@@ -85,6 +90,74 @@
             <p class="admin-panel-desc">This text streams live at the top of the public website.</p>
             <textarea ng-model="tickerText" rows="3"></textarea>
             <button class="admin-btn-primary" ng-click="saveTicker()"><i class="fa-solid fa-check"></i> Update Live Ticker</button>
+        </div>
+
+        <!-- ================= ANALYTICS & FEEDBACK ================= -->
+        <div ng-if="activeSection==='analytics'">
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <i class="fa-solid fa-eye"></i>
+                    <div class="stat-value">{{ stats.siteVisits }}</div>
+                    <div class="stat-label">Total Page Views</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-fire"></i>
+                    <div class="stat-value">{{ stats.totalContentViews }}</div>
+                    <div class="stat-label">Content Views</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <div class="stat-value">{{ stats.totalContentItems }}</div>
+                    <div class="stat-label">Content Items</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-comment-dots"></i>
+                    <div class="stat-value">{{ feedbackList.length }}</div>
+                    <div class="stat-label">Feedback Received</div>
+                </div>
+            </div>
+
+            <div class="admin-panel-card" style="max-width: 100%; margin-bottom: 20px;">
+                <h2><i class="fa-solid fa-chart-simple" style="color:var(--accent-cyan);"></i> Views by Category</h2>
+                <div class="bar-row" ng-repeat="c in stats.categoryBreakdown">
+                    <div class="bar-label">{{ c.category }} <span>({{ c.itemCount }} items)</span></div>
+                    <div class="bar-track">
+                        <div class="bar-fill" ng-style="{ width: c.percent + '%' }"></div>
+                    </div>
+                    <div class="bar-value">{{ c.views }}</div>
+                </div>
+                <p class="admin-panel-desc" ng-if="stats.categoryBreakdown.length === 0">No views recorded yet.</p>
+            </div>
+
+            <div class="admin-panel-card" style="max-width: 100%; margin-bottom: 20px;">
+                <h2><i class="fa-solid fa-ranking-star" style="color:var(--accent-amber);"></i> Top Content</h2>
+                <table class="admin-table">
+                    <thead>
+                        <tr><th>Title</th><th>Category</th><th>Views</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in stats.topContent">
+                            <td class="admin-cell-title">{{ item.title }}</td>
+                            <td>{{ item.category }}</td>
+                            <td>{{ item.views || 0 }}</td>
+                        </tr>
+                        <tr ng-if="stats.topContent.length === 0"><td colspan="3" class="admin-empty-row">No content yet.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="admin-panel-card" style="max-width: 100%;">
+                <h2><i class="fa-solid fa-comment-dots" style="color:var(--accent-red);"></i> Visitor Feedback</h2>
+                <div class="feedback-item" ng-repeat="f in feedbackList">
+                    <div class="feedback-item-head">
+                        <strong>{{ f.name }}</strong>
+                        <span ng-if="f.email">· {{ f.email }}</span>
+                        <button class="admin-icon-danger" ng-click="deleteFeedback(f)" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                    <p>{{ f.message }}</p>
+                </div>
+                <p class="admin-panel-desc" ng-if="feedbackList.length === 0">No feedback submitted yet.</p>
+            </div>
         </div>
 
         <!-- ================= ADMIN PROFILE ================= -->

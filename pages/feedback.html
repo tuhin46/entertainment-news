@@ -1,0 +1,28 @@
+<div class="feedback-page">
+    <h2 class="section-title"><i class="fa-solid fa-comment-dots" style="color:var(--accent-cyan);"></i> Send Feedback</h2>
+    <p class="feedback-sub">Tell us what you think, or suggest content you'd like to see.</p>
+
+    <form class="feedback-card" ng-if="!submitted" ng-submit="submitFeedback()">
+        <div class="admin-form-group">
+            <label>Name</label>
+            <input type="text" ng-model="feedback.name" placeholder="Your name" required>
+        </div>
+        <div class="admin-form-group">
+            <label>Email (optional)</label>
+            <input type="email" ng-model="feedback.email" placeholder="you@example.com">
+        </div>
+        <div class="admin-form-group">
+            <label>Message</label>
+            <textarea ng-model="feedback.message" rows="5" placeholder="Your feedback..." required></textarea>
+        </div>
+        <button type="submit" class="admin-btn-primary">
+            <i class="fa-solid fa-paper-plane"></i> Send Feedback
+        </button>
+    </form>
+
+    <div class="feedback-card feedback-success" ng-if="submitted">
+        <i class="fa-solid fa-circle-check"></i>
+        <h3>Thanks for your feedback!</h3>
+        <p>We appreciate you taking the time to help us improve.</p>
+    </div>
+</div>

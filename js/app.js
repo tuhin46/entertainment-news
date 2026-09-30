@@ -28,6 +28,10 @@ app.config(function ($routeProvider, $locationProvider) {
             templateUrl: "pages/influencers.html",
             controller: "InfluencerController"
         })
+        .when("/feedback", {
+            templateUrl: "pages/feedback.html",
+            controller: "FeedbackController"
+        })
         .when("/bookmarks", {
             templateUrl: "pages/bookmarks.html",
             controller: "BookmarksController"
@@ -105,6 +109,7 @@ app.controller('AppController', function ($scope, $sce, $location, AuthService, 
     $scope.isAdminLoggedIn = AuthService.isLoggedIn();
     $scope.$on('$routeChangeSuccess', function () {
         $scope.isAdminLoggedIn = AuthService.isLoggedIn();
+        ContentService.recordVisit();
     });
 });
 
@@ -194,4 +199,7 @@ app.controller('NewsController', function ($scope, $routeParams, ContentService)
     var id = parseInt($routeParams.id);
     var found = ContentService.getById(id);
     $scope.article = found || ContentService.getAll()[0];
+    if (found) {
+        ContentService.recordView(id);
+    }
 });
