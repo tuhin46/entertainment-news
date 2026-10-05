@@ -126,9 +126,20 @@ app.controller('AppController', function ($scope, $sce, $location, AuthService, 
 app.controller('HomeController', function ($scope, ContentService) {
     $scope.allList = ContentService.getPublished();
     $scope.trendingSpotlightList = ContentService.getByCategory('Trending', true).slice(0, 4);
-    $scope.spotlightList = ContentService.getByCategory('Influencers', true).slice(0, 2)
-        .concat(ContentService.getByCategory('Celebrities', true).slice(0, 2));
+    var influencerSpotlight = ContentService.getByCategory('Influencers', true).slice(0, 2);
+    var celebritySpotlight = ContentService.getByCategory('Celebrities', true).slice(0, 2);
+    $scope.spotlightList = influencerSpotlight.concat(celebritySpotlight).sort(function (a, b) {
+        return ((b.pinned ? 1 : 0) - (a.pinned ? 1 : 0)) || (b.id - a.id);
+    });
     $scope.selectedCategory = '';
+    $scope.categoryOptions = [
+        { label: 'All Categories', value: '' },
+        { label: 'Movies', value: 'Movies' },
+        { label: 'Music', value: 'Music' },
+        { label: 'Celebrities', value: 'Celebrities' },
+        { label: 'Trending', value: 'Trending' },
+        { label: 'Influencers', value: 'Influencers' }
+    ];
     $scope.searchInput = '';
     $scope.activeSearch = '';
     $scope.searchResults = [];
@@ -152,12 +163,8 @@ app.controller('HomeController', function ($scope, ContentService) {
         $scope.searchResults = [];
     };
 
-    // Category Pill Filter
-    $scope.setCategory = function (cat) {
-        $scope.selectedCategory = cat;
-        if ($scope.activeSearch) {
-            performFilter();
-        }
+    $scope.onCategoryChange = function () {
+        if ($scope.activeSearch) performFilter();
     };
 
     function performFilter() {
