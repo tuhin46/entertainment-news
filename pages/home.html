@@ -18,13 +18,14 @@
             </button>
         </form>
 
-        <!-- Category Filters -->
-        <div class="filter-pills">
-            <button class="filter-btn" ng-class="{'active': selectedCategory === ''}" ng-click="setCategory('')">All</button>
-            <button class="filter-btn" ng-class="{'active': selectedCategory === 'Movies'}" ng-click="setCategory('Movies')">Movies</button>
-            <button class="filter-btn" ng-class="{'active': selectedCategory === 'Music'}" ng-click="setCategory('Music')">Music</button>
-            <button class="filter-btn" ng-class="{'active': selectedCategory === 'Celebrities'}" ng-click="setCategory('Celebrities')">Celebrities</button>
-            <button class="filter-btn" ng-class="{'active': selectedCategory === 'Influencers'}" ng-click="setCategory('Influencers')">Influencers</button>
+        <!-- Category Filter -->
+        <div class="filter-dropdown-wrap">
+            <label for="categoryFilter">Filter</label>
+            <select id="categoryFilter"
+                    ng-model="selectedCategory"
+                    ng-options="option.value as option.label for option in categoryOptions"
+                    ng-change="onCategoryChange()">
+            </select>
         </div>
     </div>
 
@@ -79,6 +80,37 @@
     <!-- ================= 2. DEFAULT VIEW: SPOTLIGHT + EXPLORE CHANNELS ================= -->
     <!-- ================= 2. DEFAULT VIEW: TRENDING + SPOTLIGHT + EXPLORE CHANNELS ================= -->
 <div ng-if="!activeSearch">
+    <h2 class="section-title">
+        <i class="fa-solid fa-clock" style="color:var(--accent-cyan);"></i> Latest Stories
+    </h2>
+
+    <div class="fusion-grid">
+        <a ng-repeat="item in allList | limitTo:4" ng-href="#!/news/{{ item.id }}" class="fusion-card">
+            <div class="fusion-poster">
+                <div class="glass-tag"><span class="tag-dot"></span> {{ item.category | uppercase }}</div>
+                <div class="pin-badge" ng-if="item.pinned"><i class="fa-solid fa-thumbtack"></i> Pinned</div>
+
+                <button class="btn-bookmark" ng-class="{'bookmarked': isBookmarked(item.id)}" ng-click="toggleBookmark(item, $event)" title="Save">
+                    <i class="fa-solid fa-bookmark"></i>
+                </button>
+
+                <button class="btn-trailer-overlay" ng-click="openTrailer(item, $event)">
+                    <i class="fa-solid fa-play"></i> Trailer
+                </button>
+
+                <img ng-src="{{ item.image }}" alt="{{ item.title }}">
+                <div class="glass-rating"><i class="fa-solid fa-star"></i> {{ item.rating }}</div>
+            </div>
+            <div class="fusion-info">
+                <div class="fusion-title">{{ item.title }}</div>
+                <div class="fusion-meta">
+                    <span>{{ item.category }}</span>
+                    <span class="fusion-pill">{{ item.year }}</span>
+                </div>
+            </div>
+        </a>
+    </div>
+
     <h2 class="section-title">
         <i class="fa-solid fa-fire" style="color:var(--accent-amber);"></i> Trending Now
     </h2>
