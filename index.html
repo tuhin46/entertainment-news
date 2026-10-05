@@ -20,7 +20,7 @@
     <header class="navbar">
         <div class="nav-container">
             <a href="#!/home" class="logo">
-                <span class="logo-badge">LIVE</span>
+                <span class="logo-badge live-blink">LIVE</span>
                 <span class="logo-title">MEDIA <span class="highlight">GOSSIP</span></span>
             </a>
 
@@ -39,9 +39,6 @@
                 <a href="#!/about" class="nav-item"><i class="fa-solid fa-circle-info"></i> About</a>
             </nav>
 
-            <a href="{{ isAdminLoggedIn ? '#!/admin/dashboard' : '#!/admin/login' }}" class="admin-access-btn" title="Admin Access">
-                <i class="fa-solid fa-lock"></i>
-            </a>
         </div>
     </header>
 
@@ -108,6 +105,9 @@
                     <input type="email" placeholder="Enter your email" required>
                     <button type="submit"><i class="fa-solid fa-arrow-right"></i></button>
                 </form>
+                <a href="{{ isAdminLoggedIn ? '#!/admin/dashboard' : '#!/admin/login' }}" class="footer-admin-btn">
+                    <i class="fa-solid fa-lock"></i> Admin Panel
+                </a>
             </div>
         </div>
 
