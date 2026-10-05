@@ -72,7 +72,7 @@
                                 <span class="admin-status-badge" ng-class="item.status === 'Draft' ? 'is-draft' : 'is-published'">{{ item.status }}</span>
                             </td>
                             <td class="admin-actions">
-                                <button ng-click="togglePin(item)" ng-disabled="saving" ng-class="{'admin-icon-pinned': item.pinned}" title="{{ item.pinned ? 'Unpin' : 'Pin to top' }}"><i class="fa-solid fa-thumbtack"></i></button>
+                                <button class="admin-pin-action" ng-click="togglePin(item)" ng-disabled="saving" ng-class="{'admin-icon-pinned': item.pinned}" title="{{ item.pinned ? 'Unpin' : 'Pin to top' }}"><i class="fa-solid fa-thumbtack"></i><span>{{ item.pinned ? 'Unpin' : 'Pin' }}</span></button>
                                 <button ng-click="openEditModal(item)" title="Edit"><i class="fa-solid fa-pen"></i></button>
                                 <a href="#!/news/{{ item.id }}" target="_blank" title="Preview"><i class="fa-solid fa-eye"></i></a>
                                 <button class="admin-icon-danger" ng-click="askDelete(item)" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
